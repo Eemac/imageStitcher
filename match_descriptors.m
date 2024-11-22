@@ -41,5 +41,11 @@ function [selected_points] = match_descriptors(descriptors_right, strongest_left
         end
     end
     % old_selected_points = selected_points;
+    mask = matched_points(:,2)<1*10^7;
+    selected_points = selected_points(mask,:);
     selected_points = selected_points(selected_points(:,2)~=0,:);
+    if ~suppress
+        figure;
+        histogram(matched_points(:,2),50)
+    end
 end

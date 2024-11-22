@@ -11,7 +11,7 @@ function [final_slope, final_length, final_confidence] = custom_sift(left,right,
     [slopes, lengths, inliers] = filter_matches(x1, y1, x2, y2, 0.25, 0.25, suppress);
     final_slope = mean(slopes(inliers));
     final_length = mean(lengths(inliers));
-    final_confidence = sum(inliers)/quantity;
+    final_confidence = sum(inliers)^2/(quantity*length(selected_points));
     if ~suppress
         final_slope
         final_length
