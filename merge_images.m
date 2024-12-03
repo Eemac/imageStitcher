@@ -24,7 +24,7 @@ function out = merge_images(im1, im2, dx, dy)
     end
 
     %create new image blank
-    out = zeros(xbound, ybound, 3, "uint8");
+    out = zeros(ybound, xbound, 3, "uint8");
 
     %add image 1
     out(originy_im1:originy_im1+size(im1,1)-1,originx_im1:originx_im1+size(im1,2)-1, :) = im1(:,:,:);
