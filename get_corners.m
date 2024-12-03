@@ -1,4 +1,4 @@
-function [strongest_left, strongest_right, quantity, combined] = get_corners(left, right, qty, suppress)
+function [strongest_left, strongest_right, quantity_l, quantity_r, combined] = get_corners(left, right, quantity_l, quantity_r, suppress)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
     corners_left = detectHarrisFeatures(im2gray(left));
@@ -13,15 +13,17 @@ function [strongest_left, strongest_right, quantity, combined] = get_corners(lef
         imshow(combined);
         hold on;
     end
-    quantity = qty;%500;
-    strongest_left = corners_left.selectStrongest(quantity);
-    strongest_right = corners_right.selectStrongest(quantity);
+    strongest_left = corners_left.selectStrongest(quantity_l);
+    strongest_right = corners_right.selectStrongest(quantity_r);
     strongest_left.Location = fliplr(strongest_left.Location);
     strongest_right.Location = fliplr(strongest_right.Location);
-    quantity = min(quantity,min(length(strongest_right),length(strongest_left)));
+    quantity_l = min(quantity_l,length(strongest_left));
+    quantity_r = min(quantity_r,length(strongest_right));
+    quantity_l = min(quantity_l, quantity_r);
     if ~suppress
         plot(strongest_left.Location(:,2),strongest_left.Location(:,1),"g+");
         plot(strongest_right.Location(:,2)+size(left,2),strongest_right.Location(:,1),"g+");
-        disp(quantity)
+        disp(quantity_l)
+        disp(quantity_r)
     end
 end

@@ -1,11 +1,12 @@
-function [selected_points] = match_descriptors(descriptors_right, strongest_left, offset_left_horiz, offset_left_vert, quantity, radius, iterations, suppress)
+function [selected_points] = match_descriptors(descriptors_right, strongest_left, offset_left_horiz, offset_left_vert, quantity_l, quantity_r, radius, iterations, suppress)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
-    selected_points = zeros(quantity,2);
-    selected_points(:,1) = randperm(quantity,size(selected_points,1))';
-    matched_points = zeros(size(selected_points));
-    matched_points(:,2) = 10^12;
+    selected_points = zeros(quantity_l,2);
+    selected_points(:,1) = randperm(quantity_l,size(selected_points,1))';
     remaining_selected = true(size(selected_points,1),1);
+
+    matched_points = zeros(quantity_r,2);
+    matched_points(:,2) = 10^12;
     remaining_matched = true(size(matched_points,1),1);
     
     for j=1:iterations
@@ -43,7 +44,8 @@ function [selected_points] = match_descriptors(descriptors_right, strongest_left
     % old_selected_points = selected_points;
     thresh = 1*10^8;
     mask = matched_points(:,2)<thresh;
-    selected_points = selected_points(mask,:);
+    mask_ind = matched_points(mask,1);
+    selected_points = selected_points(mask_ind,:);
     selected_points = selected_points(selected_points(:,2)~=0,:);
     if ~suppress
         figure;
