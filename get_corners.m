@@ -1,8 +1,8 @@
 function [strongest_left, strongest_right, quantity_l, quantity_r, combined] = get_corners(left, right, quantity_l, quantity_r, suppress)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-    corners_left = detectHarrisFeatures(im2gray(left));
-    corners_right = detectHarrisFeatures(im2gray(right));
+    corners_left = detectHarrisFeatures(im2gray(left),"MinQuality",0);
+    corners_right = detectHarrisFeatures(im2gray(right),"MinQuality",0);
     combined = zeros(size(left));
     combined = [combined combined];
     combined(1:size(left,1),1:size(left,2),1:size(left,3)) = left;
