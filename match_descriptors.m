@@ -42,7 +42,7 @@ function [selected_points] = match_descriptors(descriptors_right, strongest_left
         end
     end
     % old_selected_points = selected_points;
-    thresh = 1*10^8;
+    thresh = prctile(matched_points(:,2),15);
     mask = matched_points(:,2)<thresh;
     mask_ind = matched_points(mask,1);
     selected_points = selected_points(mask_ind,:);
