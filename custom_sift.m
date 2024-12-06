@@ -1,4 +1,4 @@
-function [final_slope, final_length, final_delta_x, final_delta_y, final_confidence] = custom_sift(input_left,input_right,radius,suppress)
+function [final_slope, final_length, final_delta_x, final_delta_y, final_confidence] = custom_sift(input_left,input_right,radius,points,suppress)
 %UNTITLED10 Summary of this function goes here
 %   Detailed explanation goes here
     % radius = 8;
@@ -9,14 +9,14 @@ function [final_slope, final_length, final_delta_x, final_delta_y, final_confide
     area_right = size(right,1)*size(right,2);
     flipped = false;
     if area_left<area_right
-        quantity_l = round(1.5*sqrt(area_left));
-        quantity_r = round(1.5*sqrt(area_right));
+        quantity_l = round(points*sqrt(area_left));
+        quantity_r = round(points*sqrt(area_right));
     else
         temp = left;
         left = right;
         right = temp;
-        quantity_l = round(1.5*sqrt(area_right));
-        quantity_r = round(1.5*sqrt(area_left));
+        quantity_l = round(points*sqrt(area_right));
+        quantity_r = round(points*sqrt(area_left));
         flipped = true;
     end
     [strongest_left, strongest_right, quantity_l, quantity_r, combined] = get_corners(left, right, quantity_l, quantity_r, suppress);
