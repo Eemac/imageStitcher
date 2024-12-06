@@ -54,7 +54,7 @@ function [out, valid] = merge_images(im1, im2, dx, dy)
 
     overlap = and(im2gray(out1)~=0,im2gray(out2)~=0);
     difference = sum(abs(int8(out1(overlap))-int8(out2(overlap))),"all");
-    thresh = 30*sum(overlap,"all");
+    thresh = 25*sum(overlap,"all");
     difference/thresh
     valid = difference<=thresh;
 
