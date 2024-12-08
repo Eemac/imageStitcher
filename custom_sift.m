@@ -22,7 +22,8 @@ function [final_slope, final_length, final_delta_x, final_delta_y, final_confide
     [strongest_left, strongest_right, quantity_l, quantity_r, combined] = get_corners(left, right, quantity_l, quantity_r, suppress);
     [offset_left_horiz,offset_left_vert,offset_right_horiz,offset_right_vert] = get_gradients(left, right, radius, 3);
     [descriptors_right] = get_right_descriptors(strongest_right, offset_right_horiz, offset_right_vert, radius);
-    [selected_points] = match_descriptors(descriptors_right, strongest_left, offset_left_horiz, offset_left_vert, quantity_l, quantity_r, radius, 20, suppress);
+    [descriptors_left] = get_left_descriptors(strongest_left, offset_left_horiz, offset_left_vert, radius);
+    [selected_points] = match_descriptors(descriptors_right, descriptors_left, strongest_left, offset_left_horiz, offset_left_vert, quantity_l, quantity_r, radius, 20, suppress);
     [x1,y1,x2,y2] = get_match_points(left, strongest_left,strongest_right, combined, selected_points, suppress);
     [slopes, lengths, delta_x, delta_y, inliers] = filter_matches(left, x1, y1, x2, y2, 0.15, 0.15, suppress);
     final_slope = 0;%mean(slopes(inliers));

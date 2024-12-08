@@ -1,4 +1,4 @@
-function [selected_points] = match_descriptors(descriptors_right, strongest_left, offset_left_horiz, offset_left_vert, quantity_l, quantity_r, radius, iterations, suppress)
+function [selected_points] = match_descriptors(descriptors_right, descriptors_left, strongest_left, offset_left_horiz, offset_left_vert, quantity_l, quantity_r, radius, iterations, suppress)
 %UNTITLED6 Summary of this function goes here
 %   Detailed explanation goes here
     selected_points = zeros(quantity_l,2);
@@ -14,9 +14,9 @@ function [selected_points] = match_descriptors(descriptors_right, strongest_left
             if ~remaining_selected(i)
                 continue
             end
-            minxy = double(uint32(strongest_left.Location(selected_points(i,1),:)));
-            maxxy = double(uint32(strongest_left.Location(selected_points(i,1),:)+2*radius));
-            descriptor_left = sift_descriptor(offset_left_horiz, offset_left_vert, minxy, maxxy, 1, radius);
+            % minxy = double(uint32(strongest_left.Location(selected_points(i,1),:)));
+            % maxxy = double(uint32(strongest_left.Location(selected_points(i,1),:)+2*radius));
+            descriptor_left = descriptors_left(:,:,selected_points(i,1)); %sift_descriptor(offset_left_horiz, offset_left_vert, minxy, maxxy, 1, radius);
             sd = (descriptors_right(:,:,remaining_matched)-descriptor_left).^2;
             ssd = sum(sd,1:2);
             ssd = squeeze(ssd);
