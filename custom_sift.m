@@ -9,13 +9,13 @@ function [final_slope, final_length, final_delta_x, final_delta_y, final_confide
     area_right = size(right,1)*size(right,2);
     flipped = false;
     if area_left<area_right
-        quantity_l = round(sqrt(area_left));
+        quantity_l = round(points*sqrt(area_left));
         quantity_r = round(points*sqrt(area_right));
     else
         temp = left;
         left = right;
         right = temp;
-        quantity_l = round(sqrt(area_right));
+        quantity_l = round(points*sqrt(area_right));
         quantity_r = round(points*sqrt(area_left));
         flipped = true;
     end

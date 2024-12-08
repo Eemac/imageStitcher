@@ -55,7 +55,7 @@ function [out, valid] = merge_images(im1, im2, dx, dy, mismatch)
     out2_gray = im2gray(out2);
 
     overlap = uint8(out1_gray~=0).*uint8(out2_gray~=0);
-    difference = squeeze(sum(abs(int8(out1.*overlap)-int8(out2.*overlap)),[1,2]));
+    difference = squeeze(sum(abs(double(out1.*overlap)-double(out2.*overlap)),[1,2]));
     thresh = mismatch*sum(overlap,"all");
     difference/thresh
     valid = all(difference<=thresh);
