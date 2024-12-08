@@ -1,4 +1,4 @@
-function [out, valid] = merge_images(im1, im2, dx, dy)
+function [out, valid] = merge_images(im1, im2, dx, dy, mismatch)
 
     if dx>=0
         % im2 moves right
@@ -54,11 +54,11 @@ function [out, valid] = merge_images(im1, im2, dx, dy)
     out2(originy_im2:originy_im2+size(im2,1)-1,originx_im2:originx_im2+size(im2,2)-1, :) = im2(:,:,:);
     out2_gray = im2gray(out2);
 
-    overlap = and(out1_gray~=0,out2_gray~=0);
-    difference = sum(abs(int8(out1(overlap))-int8(out2(overlap))),"all");
-    thresh = 25*sum(overlap,"all");
+    overlap = uint8(out1_gray~=0).*uint8(out2_gray~=0);
+    difference = squeeze(sum(abs(int8(out1.*overlap)-int8(out2.*overlap)),[1,2]));
+    thresh = mismatch*sum(overlap,"all");
     difference/thresh
-    valid = difference<=thresh;
+    valid = all(difference<=thresh);
 
     if ~valid
         out = im1;

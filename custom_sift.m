@@ -9,17 +9,17 @@ function [final_slope, final_length, final_delta_x, final_delta_y, final_confide
     area_right = size(right,1)*size(right,2);
     flipped = false;
     if area_left<area_right
-        quantity_l = round(points*sqrt(area_left));
+        quantity_l = round(sqrt(area_left));
         quantity_r = round(points*sqrt(area_right));
     else
         temp = left;
         left = right;
         right = temp;
-        quantity_l = round(points*sqrt(area_right));
+        quantity_l = round(sqrt(area_right));
         quantity_r = round(points*sqrt(area_left));
         flipped = true;
     end
-    [strongest_left, strongest_right, quantity_l, quantity_r, combined] = get_corners(left, right, quantity_l, quantity_r, suppress);
+    [strongest_left, strongest_right, quantity_l, quantity_r, combined] = get_corners(left, right, quantity_l, quantity_r, points, suppress);
     [offset_left_horiz,offset_left_vert,offset_right_horiz,offset_right_vert] = get_gradients(left, right, radius, 3);
     [descriptors_right] = get_right_descriptors(strongest_right, offset_right_horiz, offset_right_vert, radius);
     [descriptors_left] = get_left_descriptors(strongest_left, offset_left_horiz, offset_left_vert, radius);
