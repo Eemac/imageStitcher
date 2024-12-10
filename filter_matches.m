@@ -14,19 +14,23 @@ function [slopes, lengths, delta_x, delta_y, inliers] = filter_matches(left, x1,
     s=slope_dev*std(slopes_modified);
     if ~suppress
         figure;
-        histogram(slopes_modified)
-        xline(m+s)
-        xline(m-s)
+        histogram(slopes_modified,30)
+        xline(m+s,"r")
+        xline(m-s,"r")
+        title("Slope Filtering")
+        xlabel("Slope (rad)")
     end
     slope_inliers = (m-s)<slopes_modified & slopes_modified<(m+s);
 
-    m=mode(round(lengths_modified));
+    m=mode(round(lengths_modified,1));
     s=length_dev*std(lengths_modified);
     if ~suppress
         figure;
-        histogram(lengths_modified)
-        xline(m+s)
-        xline(m-s)
+        histogram(lengths_modified, 30)
+        xline(m+s,"r")
+        xline(m-s,"r")
+        title("Length Filtering")
+        xlabel("Length (px)")
     end
     length_inliers = (m-s)<lengths_modified & lengths_modified<(m+s);
 

@@ -1,4 +1,4 @@
-function [offset_left_horiz,offset_left_vert,offset_right_horiz,offset_right_vert] = get_gradients(left, right, radius, sigma)
+function [offset_left_horiz,offset_left_vert,offset_right_horiz,offset_right_vert] = get_gradients(left, right, radius, sigma, suppress)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     sobel = [-1 -2 -1; 0 0 0; 1 2 1];
@@ -10,4 +10,14 @@ function [offset_left_horiz,offset_left_vert,offset_right_horiz,offset_right_ver
     offset_right_vert = zeros(size(right, 1:2)+[2*radius,2*radius]);
     offset_right_horiz(radius+1:end-radius,radius+1:end-radius) = conv2(im2gray(imgaussfilt(right,sigma)),sobel',"same");
     offset_right_vert(radius+1:end-radius,radius+1:end-radius) = conv2(im2gray(imgaussfilt(right,sigma)),sobel,"same");
+    if ~suppress
+        figure;
+        imshow(offset_left_vert)
+        figure;
+        imshow(offset_left_horiz)
+        figure;
+        imshow(offset_right_vert)
+        figure;
+        imshow(offset_right_horiz)
+    end
 end

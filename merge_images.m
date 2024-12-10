@@ -1,4 +1,4 @@
-function [out, valid] = merge_images(im1, im2, dx, dy, mismatch)
+function [out, valid] = merge_images(im1, im2, dx, dy, mismatch, suppress)
 
     if dx>=0
         % im2 moves right
@@ -56,6 +56,10 @@ function [out, valid] = merge_images(im1, im2, dx, dy, mismatch)
 
     overlap = uint8(out1_gray~=0).*uint8(out2_gray~=0);
     difference = squeeze(sum(abs(double(out1.*overlap)-double(out2.*overlap)),[1,2]));
+    if ~suppress
+        figure;
+        imshow(uint8(abs(double(out1.*overlap)-double(out2.*overlap))))
+    end
     thresh = mismatch*sum(overlap,"all");
     difference/thresh
     valid = all(difference<=thresh);
@@ -68,6 +72,14 @@ function [out, valid] = merge_images(im1, im2, dx, dy, mismatch)
         out4 = out2.*uint8(out1_gray==0); % image 2 but not 1
         out5 = out1.*uint8(out1_gray~=0).*uint8(out2_gray~=0); % images 1 and 2
         out = out3+out4+out5;
+        if ~suppress
+            figure;
+            imshow(out3)
+            figure;
+            imshow(out4)
+            figure;
+            imshow(out5)
+        end
     end
 
 end
