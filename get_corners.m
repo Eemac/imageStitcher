@@ -7,8 +7,8 @@ function [strongest_left, strongest_right, quantity_l, quantity_r, combined] = g
     % corners_right = detectHarrisFeatures(gray_right,"MinQuality",0);
 
     % NEW
-    strongest_left=harriscorners(gray_left, points);
-    strongest_right=harriscorners(gray_right, points);
+    strongest_left=harris_corners(gray_left);
+    strongest_right=harris_corners(gray_right);
     
     combined = zeros(size(left));
     combined = [combined combined];

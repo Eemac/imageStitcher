@@ -1,55 +1,75 @@
-function [selected_points] = match_descriptors(descriptors_right, descriptors_left, strongest_left, offset_left_horiz, offset_left_vert, quantity_l, quantity_r, radius, iterations, suppress)
-%UNTITLED6 Summary of this function goes here
-%   Detailed explanation goes here
-    selected_points = zeros(quantity_l,2);
-    selected_points(:,1) = randperm(quantity_l,size(selected_points,1))';
-    remaining_selected = true(size(selected_points,1),1);
+function [left_matches] = match_descriptors(descriptors_left, descriptors_right, quantity_l, quantity_r, iterations, suppress)
+% Matches two sets of descriptors.
+%   Args:
+%       descriptors_left: left (image 1) descriptors
+%       descriptors_right: right (image 2) descriptors
+%       quantity_left: quantity of left (image 1) descriptors to use
+%       quantity_right: quantity of right (image 2) descriptors to use
+%       iterations: maximum number of matching iterations
+%       suppress: debug printing bool
+%   Returns:
+%       left_matches: (left indices, matched right indices) vector
 
-    matched_points = zeros(quantity_r,2);
-    matched_points(:,2) = 10^12;
-    remaining_matched = true(size(matched_points,1),1);
+    % Set up selected_points to track matches in left image
+    % (left indices, matched right indices)
+    left_matches = zeros(quantity_l,2);
+    left_matches(:,1) = randperm(quantity_l,size(left_matches,1))';
+    remaining_left = true(size(left_matches,1),1);
+
+    % Set up matched_points to track matches in right image
+    % (left indices, strength of match)
+    right_matches = zeros(quantity_r,2);
+    right_matches(:,2) = 10^12;
+    remaining_right = true(size(right_matches,1),1);
     
     for j=1:iterations
-        for i=1:length(selected_points)
-            if ~remaining_selected(i)
+        for i=1:length(left_matches)
+            % Skip point if already mapped
+            if ~remaining_left(i)
                 continue
             end
-            % minxy = double(uint32(strongest_left.Location(selected_points(i,1),:)));
-            % maxxy = double(uint32(strongest_left.Location(selected_points(i,1),:)+2*radius));
-            descriptor_left = descriptors_left(:,:,selected_points(i,1)); %sift_descriptor(offset_left_horiz, offset_left_vert, minxy, maxxy, 1, radius);
-            sd = (descriptors_right(:,:,remaining_matched)-descriptor_left).^2;
+            % Find the SSD of the left descriptor against all right
+            % descriptors that have not been matched
+            descriptor_left = descriptors_left(:,:,left_matches(i,1));
+            sd = (descriptors_right(:,:,remaining_right)-descriptor_left).^2;
             ssd = sum(sd,1:2);
             ssd = squeeze(ssd);
+            % Find the closest match
             [v,idx] = min(ssd);
-            idx = find(remaining_matched==1,idx,"first");
+            idx = find(remaining_right==1,idx,"first");
             idx = idx(end);
-            if v<matched_points(idx,2)
-                if matched_points(idx,1)>0
-                    selected_points(matched_points(idx,1),2) = 0;
+            % If the closest match has a higher match strength, overwrite
+            if v<right_matches(idx,2)
+                % If the closest match has a left image assignment, remove
+                if right_matches(idx,1)>0
+                    left_matches(right_matches(idx,1),2) = 0;
                 end
-                selected_points(i,2) = idx;
-                matched_points(idx,1) = i;
-                matched_points(idx,2) = v;
+                % Save the matches
+                left_matches(i,2) = idx;
+                right_matches(idx,1) = i;
+                right_matches(idx,2) = v;
             end
         end
-        remaining_selected = selected_points(:,2)==0;
-        remaining_matched = matched_points(:,1)==0;
+        % Calculate remaining pairs in both images
+        remaining_left = left_matches(:,2)==0;
+        remaining_right = right_matches(:,1)==0;
         if ~suppress
-            sum(remaining_selected)
+            sum(remaining_left)
         end
-        if sum(remaining_selected)==0
+        % If all are matched, exit
+        if sum(remaining_left)==0
             break
         end
     end
-    % old_selected_points = selected_points;
-    thresh = prctile(matched_points(:,2),15);
-    mask = matched_points(:,2)<thresh;
-    mask_ind = matched_points(mask,1);
-    selected_points = selected_points(mask_ind,:);
-    selected_points = selected_points(selected_points(:,2)~=0,:);
+    % Choose top 15% of matches and remove blank rows
+    thresh = prctile(right_matches(:,2),15);
+    mask = right_matches(:,2)<thresh;
+    mask_ind = right_matches(mask,1);
+    left_matches = left_matches(mask_ind,:);
+    left_matches = left_matches(left_matches(:,2)~=0,:);
     if ~suppress
         figure;
-        histogram(matched_points(:,2),50)
+        histogram(right_matches(:,2),50)
         xline(thresh)
     end
 end
