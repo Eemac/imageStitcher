@@ -21,7 +21,7 @@ function [corners] = harriscorners(org, points)
     % imshow(uint8(ix))
     % imshow(uint8(iy))
     
-    k = 0.04;
+    k = 0.2;
     ix2 = ix.^2;
     iy2 = iy.^2;
     ixiy = ix.*iy;

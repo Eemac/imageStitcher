@@ -55,18 +55,20 @@ function [out, valid] = merge_images(im1, im2, dx, dy, mismatch, suppress)
     out2_gray = im2gray(out2);
 
     overlap = uint8(out1_gray~=0).*uint8(out2_gray~=0);
-    difference = squeeze(sum(abs(double(out1.*overlap)-double(out2.*overlap)),[1,2]));
+    difference = squeeze(mean(abs(double(out1.*overlap)-double(out2.*overlap)),[1,2]));
     if ~suppress
         figure;
         imshow(uint8(abs(double(out1.*overlap)-double(out2.*overlap))))
     end
-    thresh = mismatch*sum(overlap,"all");
-    difference/thresh
+    so = sum(overlap,"all");
+    thresh = mismatch;
+    % difference/thresh;
     valid = all(difference<=thresh);
 
     if ~valid
         out = im1;
     else
+        difference/thresh
         % out = max(out1,out2);
         out3 = out1.*uint8(out2_gray==0); % image 1 but not 2
         out4 = out2.*uint8(out1_gray==0); % image 2 but not 1

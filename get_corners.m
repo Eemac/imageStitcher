@@ -9,9 +9,6 @@ function [strongest_left, strongest_right, quantity_l, quantity_r, combined] = g
     % NEW
     strongest_left=harriscorners(gray_left, points);
     strongest_right=harriscorners(gray_right, points);
-    inc = 5;
-    strongest_left = strongest_left(1:inc:end);
-    strongest_right = strongest_right(1:inc:end);
     
     combined = zeros(size(left));
     combined = [combined combined];
@@ -24,8 +21,8 @@ function [strongest_left, strongest_right, quantity_l, quantity_r, combined] = g
         hold on;
     end
     
-    thresh=5;
-    offset=7;
+    thresh=1;
+    offset=8;
     left_mask = ~logical(ceil(conv2(uint8(gray_left<=thresh),ones(offset),"same")));
     right_mask = ~logical(ceil(conv2(uint8(gray_right<=thresh),ones(offset),"same")));
 
@@ -36,6 +33,10 @@ function [strongest_left, strongest_right, quantity_l, quantity_r, combined] = g
 
     strongest_left = strongest_left(left_mask(sub2ind(size(left_mask),round(strongest_left.Location(:,1)),round(strongest_left.Location(:,2)))));
     strongest_right = strongest_right(right_mask(sub2ind(size(right_mask),round(strongest_right.Location(:,1)),round(strongest_right.Location(:,2)))));
+
+    inc = 100;
+    strongest_left = strongest_left(1:ceil(length(strongest_left)/quantity_l/inc):end);
+    strongest_right = strongest_right(1:ceil(length(strongest_right)/quantity_r/inc):end);
 
     quantity_l = min(quantity_l,length(strongest_left));
     quantity_r = min(quantity_r,length(strongest_right));
