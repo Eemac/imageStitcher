@@ -1,6 +1,16 @@
 function [offset_left_horiz,offset_left_vert,offset_right_horiz,offset_right_vert] = get_gradients(left, right, radius, sigma, suppress)
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+% Get the left and right image gradients offset by the radius of the
+% descriptor.
+%   Args:
+%       left: left image (image 1)
+%       right: right image (image 2)
+%       radius: radius of the descriptor
+%       sigma: gaussian blur sigma for preprocessing
+%       suppress: debug printing bool
+%   Returns:
+%       offset_(left/right)_(horiz/vert): all four left, right, horizontal,
+%       and vertical gradients.
+
     sobel = [-1 -2 -1; 0 0 0; 1 2 1];
     offset_left_horiz = zeros(size(left,1:2)+[2*radius,2*radius]);
     offset_left_vert = zeros(size(left,1:2)+[2*radius,2*radius]);

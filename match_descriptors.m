@@ -3,8 +3,8 @@ function [left_matches] = match_descriptors(descriptors_left, descriptors_right,
 %   Args:
 %       descriptors_left: left (image 1) descriptors
 %       descriptors_right: right (image 2) descriptors
-%       quantity_left: quantity of left (image 1) descriptors to use
-%       quantity_right: quantity of right (image 2) descriptors to use
+%       quantity_l: quantity of left (image 1) descriptors to use
+%       quantity_r: quantity of right (image 2) descriptors to use
 %       iterations: maximum number of matching iterations
 %       suppress: debug printing bool
 %   Returns:

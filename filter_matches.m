@@ -1,38 +1,47 @@
-function [slopes, lengths, delta_x, delta_y, inliers] = filter_matches(left, x1, y1, x2, y2, slope_dev,length_dev, suppress)
-%UNTITLED8 Summary of this function goes here
-%   Detailed explanation goes here
-    % slope_dev = 0.25;
-    % length_dev = 0.25;
-    slopes_modified = atan2(y2-y1,x2-x1);
-    slopes = (y2-y1)./(x2-x1);
+function [delta_x, delta_y, inliers] = filter_matches(left, x1, y1, x2, y2, slope_dev, length_dev, suppress)
+% Filter the matches based on their consensus.
+%   Args:
+%       left: left image (image 1)
+%       x1, y1, x2, y2: left and right points respectively
+%       slope_dev: acceptable standard deviation range of slope
+%       length_dev: acceptable standard deviation range of length
+%       suppress: debug printing bool
+%   Returns:
+%       delta_x: per pair x difference
+%       delta_y: per pair y difference
+%       inliers: logical array of inlier matches
+
+    % Calculate slopes and lengths
     delta_x = x2-x1;
     delta_y = y2-y1;
-    lengths_modified = sqrt((y2-y1).^2.+(x2+size(left,2)-x1).^2);
-    lengths = sqrt((y2-y1).^2.+(x2-x1).^2);
+    slopes_modified = atan2(delta_y,delta_x);
+    lengths_modified = sqrt(delta_y.^2.+(x2-x1).^2);
 
-    m=mode(round(slopes_modified,3));
-    s=slope_dev*std(slopes_modified);
+    % Calculate the mode to three decimal places for slope and stdev
+    mode_slope=mode(round(slopes_modified,3));
+    std_slope=slope_dev*std(slopes_modified);
+    
+    % Calculate the mode to one decimal place for length and stdev
+    mode_length=mode(round(lengths_modified,1));
+    std_length=length_dev*std(lengths_modified);
+    
+    % Calculate inliers
+    slope_inliers = (mode_slope-std_slope)<slopes_modified & slopes_modified<(mode_slope+std_slope);
+    length_inliers = (mode_length-std_length)<lengths_modified & lengths_modified<(mode_length+std_length);
+    inliers = slope_inliers & length_inliers;
+
     if ~suppress
         figure;
         histogram(slopes_modified,30)
-        xline(m+s,"r")
-        xline(m-s,"r")
+        xline(mode_slope+std_slope,"r")
+        xline(mode_slope-std_slope,"r")
         title("Slope Filtering")
         xlabel("Slope (rad)")
-    end
-    slope_inliers = (m-s)<slopes_modified & slopes_modified<(m+s);
-
-    m=mode(round(lengths_modified,1));
-    s=length_dev*std(lengths_modified);
-    if ~suppress
         figure;
         histogram(lengths_modified, 30)
-        xline(m+s,"r")
-        xline(m-s,"r")
+        xline(mode_length+std_length,"r")
+        xline(mode_length-std_length,"r")
         title("Length Filtering")
         xlabel("Length (px)")
     end
-    length_inliers = (m-s)<lengths_modified & lengths_modified<(m+s);
-
-    inliers = slope_inliers & length_inliers;
 end
