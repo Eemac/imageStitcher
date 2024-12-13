@@ -5,7 +5,7 @@ function [out, valid, normalized_difference] = merge_images(im1, im2, dx, dy, mi
 %       im2: secondary image
 %       dx: x-axis transformation
 %       dy: y-axis transformation
-%       mistmatch: threshold for validity checking
+%       mismatch: threshold for validity checking
 %       suppress: debug printing bool
 %   Returns:
 %       out: merged image

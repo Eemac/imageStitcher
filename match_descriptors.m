@@ -13,7 +13,7 @@ function [left_matches] = match_descriptors(descriptors_left, descriptors_right,
     % Set up selected_points to track matches in left image
     % (left indices, matched right indices)
     left_matches = zeros(quantity_l,2);
-    left_matches(:,1) = randperm(quantity_l,size(left_matches,1))';
+    left_matches(:,1) = transpose(randperm(quantity_l,size(left_matches,1)));
     remaining_left = true(size(left_matches,1),1);
 
     % Set up matched_points to track matches in right image

@@ -50,7 +50,7 @@ function [corners] = harris_corners(image)
     m = mix2.*miy2-mixiy.^2 - k*(mix2+miy2).^2;
 
     % Return cornerpoints
-    idx = [(1:numel(m))',reshape(m,[],1)];
+    idx = [transpose(1:numel(m)),reshape(m,[],1)];
     idx = sortrows(idx,2,"descend");
     [row,col] = ind2sub(size(m),idx(:,1));
     corners = cornerPoints([col,row]);

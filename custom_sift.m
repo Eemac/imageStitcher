@@ -45,7 +45,7 @@ function [final_delta_x, final_delta_y, final_confidence] = custom_sift(input_le
     % Extract the matched points
     [x1,y1,x2,y2] = get_match_points(left, strongest_left,strongest_right, combined, selected_points, suppress);
     % Filter the matches based on consensus
-    [delta_x, delta_y, inliers] = filter_matches(left, x1, y1, x2, y2, 0.15, 0.15, suppress);
+    [delta_x, delta_y, inliers] = filter_matches(x1, y1, x2, y2, 0.15, 0.15, suppress);
     % Flip the transform back
     final_delta_x = ((-1)^flipped)*mean(delta_x(inliers));
     final_delta_y = ((-1)^flipped)*mean(delta_y(inliers));

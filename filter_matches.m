@@ -1,4 +1,4 @@
-function [delta_x, delta_y, inliers] = filter_matches(left, x1, y1, x2, y2, slope_dev, length_dev, suppress)
+function [delta_x, delta_y, inliers] = filter_matches(x1, y1, x2, y2, slope_dev, length_dev, suppress)
 % Filter the matches based on their consensus.
 %   Args:
 %       left: left image (image 1)
